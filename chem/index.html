@@ -129,6 +129,8 @@
   .el-tile .z{font-size:10px;opacity:.7}
   .el-tile .sym{font-size:21px;font-weight:900;line-height:1.1;margin-top:3px}
   .el-tile .nm{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.78;margin-top:2px}
+  .el-tile .wt{font-size:9px;opacity:.62;margin-top:2px;white-space:nowrap}
+  #challengeTable.hide-number .el-tile .z,#challengeTable.hide-symbol .el-tile .sym,#challengeTable.hide-name .el-tile .nm,#challengeTable.hide-weight .el-tile .wt{visibility:hidden}
   .el-tile.highlight{outline:3px solid var(--accent);outline-offset:1px;transform:scale(1.04);z-index:4}
   .el-tile.correct-pick{outline:3px solid var(--good);animation:pop .25s ease}
   .el-tile.wrong-pick{outline:3px solid var(--bad);animation:shake .28s ease}
@@ -231,7 +233,7 @@
         </div>
         <div class="stat-panel" id="homeStats"></div>
       </div>
-      <div class="section-head"><div><h2>Choose a mode</h2><p>Fast drills, memory practice, matching, and table challenges.</p></div></div>
+      <div class="section-head"><div><h2>Choose a mode</h2><p>Fast drills, atomic-weight practice, matching, memory, and table challenges.</p></div></div>
       <div class="mode-grid" id="modeGrid"></div>
     </section>
 
@@ -299,9 +301,9 @@
     </section>
 
     <section class="screen" id="studyScreen">
-      <div class="page-head"><div class="left"><button class="back-btn" data-back="home">←</button><div><h2>Periodic Table</h2><p class="muted">Search by name, symbol, or atomic number.</p></div></div></div>
+      <div class="page-head"><div class="left"><button class="back-btn" data-back="home">←</button><div><h2>Periodic Table</h2><p class="muted">Search by name, symbol, atomic number, or atomic weight.</p></div></div></div>
       <div class="study-grid">
-        <div><div class="field"><input class="text-input" id="tableSearch" placeholder="Search Sodium, Na, or 11"></div><div class="table-wrap"><div class="periodic-table" id="studyTable"></div></div></div>
+        <div><div class="field"><input class="text-input" id="tableSearch" placeholder="Search Sodium, Na, 11, or 22.990"></div><div class="table-wrap"><div class="periodic-table" id="studyTable"></div></div></div>
         <aside class="info-panel" id="elementInfo"></aside>
       </div>
     </section>
@@ -339,13 +341,21 @@
     [55,"Cs","Cesium","alkali-metal",6,1],[56,"Ba","Barium","alkaline-earth-metal",6,2],[57,"La","Lanthanum","lanthanide",6,null],[58,"Ce","Cerium","lanthanide",6,null],[59,"Pr","Praseodymium","lanthanide",6,null],[60,"Nd","Neodymium","lanthanide",6,null],[61,"Pm","Promethium","lanthanide",6,null],[62,"Sm","Samarium","lanthanide",6,null],[63,"Eu","Europium","lanthanide",6,null],[64,"Gd","Gadolinium","lanthanide",6,null],[65,"Tb","Terbium","lanthanide",6,null],[66,"Dy","Dysprosium","lanthanide",6,null],[67,"Ho","Holmium","lanthanide",6,null],[68,"Er","Erbium","lanthanide",6,null],[69,"Tm","Thulium","lanthanide",6,null],[70,"Yb","Ytterbium","lanthanide",6,null],[71,"Lu","Lutetium","lanthanide",6,null],[72,"Hf","Hafnium","transition-metal",6,4],[73,"Ta","Tantalum","transition-metal",6,5],[74,"W","Tungsten","transition-metal",6,6],[75,"Re","Rhenium","transition-metal",6,7],[76,"Os","Osmium","transition-metal",6,8],[77,"Ir","Iridium","transition-metal",6,9],[78,"Pt","Platinum","transition-metal",6,10],[79,"Au","Gold","transition-metal",6,11],[80,"Hg","Mercury","transition-metal",6,12],[81,"Tl","Thallium","post-transition-metal",6,13],[82,"Pb","Lead","post-transition-metal",6,14],[83,"Bi","Bismuth","post-transition-metal",6,15],[84,"Po","Polonium","post-transition-metal",6,16],[85,"At","Astatine","halogen",6,17],[86,"Rn","Radon","noble-gas",6,18],
     [87,"Fr","Francium","alkali-metal",7,1],[88,"Ra","Radium","alkaline-earth-metal",7,2],[89,"Ac","Actinium","actinide",7,null],[90,"Th","Thorium","actinide",7,null],[91,"Pa","Protactinium","actinide",7,null],[92,"U","Uranium","actinide",7,null],[93,"Np","Neptunium","actinide",7,null],[94,"Pu","Plutonium","actinide",7,null],[95,"Am","Americium","actinide",7,null],[96,"Cm","Curium","actinide",7,null],[97,"Bk","Berkelium","actinide",7,null],[98,"Cf","Californium","actinide",7,null],[99,"Es","Einsteinium","actinide",7,null],[100,"Fm","Fermium","actinide",7,null],[101,"Md","Mendelevium","actinide",7,null],[102,"No","Nobelium","actinide",7,null],[103,"Lr","Lawrencium","actinide",7,null],[104,"Rf","Rutherfordium","transition-metal",7,4],[105,"Db","Dubnium","transition-metal",7,5],[106,"Sg","Seaborgium","transition-metal",7,6],[107,"Bh","Bohrium","transition-metal",7,7],[108,"Hs","Hassium","transition-metal",7,8],[109,"Mt","Meitnerium","transition-metal",7,9],[110,"Ds","Darmstadtium","transition-metal",7,10],[111,"Rg","Roentgenium","transition-metal",7,11],[112,"Cn","Copernicium","transition-metal",7,12],[113,"Nh","Nihonium","post-transition-metal",7,13],[114,"Fl","Flerovium","post-transition-metal",7,14],[115,"Mc","Moscovium","post-transition-metal",7,15],[116,"Lv","Livermorium","post-transition-metal",7,16],[117,"Ts","Tennessine","halogen",7,17],[118,"Og","Oganesson","noble-gas",7,18]
   ];
-  const elements = RAW.map(([number,symbol,name,category,period,group]) => ({number,symbol,name,category,period,group}));
+  const ATOMIC_WEIGHTS = [
+    "1.008","4.0026","6.94","9.0122","10.81","12.011","14.007","15.999","18.998","20.180","22.990","24.305","26.982","28.085","30.974","32.06","35.45","39.948","39.0983","40.078","44.9559","47.867","50.9415","51.9961","54.9380","55.845","58.9332","58.6934","63.546","65.38","69.723","72.630","74.9216","78.971","79.904","83.798","85.4678","87.62","88.9058","91.224","92.9064","95.95","[98]","101.07","102.9055","106.42","107.8682","112.414","114.818","118.710","121.760","127.60","126.9045","131.293","132.9055","137.327","138.9055","140.116","140.9077","144.242","[145]","150.36","151.964","157.25","158.9254","162.500","164.9303","167.259","168.9342","173.045","174.9668","178.49","180.9479","183.84","186.207","190.23","192.217","195.084","196.9666","200.592","204.38","207.2","208.9804","[209]","[210]","[222]","[223]","[226]","[227]","232.0377","231.0359","238.0289","[237]","[244]","[243]","[247]","[247]","[251]","[252]","[257]","[258]","[259]","[266]","[267]","[268]","[269]","[270]","[277]","[278]","[281]","[282]","[285]","[286]","[289]","[290]","[293]","[294]","[294]"
+  ];
+  const elements = RAW.map(([number,symbol,name,category,period,group]) => {
+    const weightLabel=ATOMIC_WEIGHTS[number-1];
+    return {number,symbol,name,category,period,group,weightLabel,weight:Number(weightLabel.replace(/[\[\]]/g,''))};
+  });
   const byNumber = new Map(elements.map(e => [e.number,e]));
   const CATEGORIES = [
     ["alkali-metal","Alkali Metals"],["alkaline-earth-metal","Alkaline Earth Metals"],["transition-metal","Transition Metals"],["post-transition-metal","Post-transition Metals"],["metalloid","Metalloids"],["nonmetal","Nonmetals"],["halogen","Halogens"],["noble-gas","Noble Gases"],["lanthanide","Lanthanides"],["actinide","Actinides"]
   ];
   const QUESTION_TYPES = [
-    ["name-symbol","Name → Symbol"],["symbol-name","Symbol → Name"],["name-number","Name → Atomic Number"],["number-name","Atomic Number → Name"],["symbol-number","Symbol → Atomic Number"],["number-symbol","Atomic Number → Symbol"]
+    ["name-symbol","Name → Symbol"],["symbol-name","Symbol → Name"],["name-number","Name → Atomic Number"],["number-name","Atomic Number → Name"],["symbol-number","Symbol → Atomic Number"],["number-symbol","Atomic Number → Symbol"],
+    ["name-weight","Name → Atomic Weight"],["symbol-weight","Symbol → Atomic Weight"],["number-weight","Atomic Number → Atomic Weight"],
+    ["weight-name","Atomic Weight → Name"],["weight-symbol","Atomic Weight → Symbol"],["weight-number","Atomic Weight → Atomic Number"]
   ];
   const MODES = [
     {id:"quick",kicker:"Fast practice",name:"Quick Quiz",desc:"Four-choice questions with instant feedback and streak tracking."},
@@ -353,7 +363,10 @@
     {id:"speed",kicker:"60 seconds",name:"Speed Round",desc:"Answer continuously, build streaks, and chase a high score."},
     {id:"match",kicker:"Pairs",name:"Match Mode",desc:"Match names, symbols, and atomic numbers across two columns."},
     {id:"challenge",kicker:"Table skills",name:"Periodic Table Challenge",desc:"Find requested elements on a full interactive periodic table."},
-    {id:"flash",kicker:"Memory",name:"Flashcards",desc:"Flip cards and mark what you know or still need to learn."}
+    {id:"flash",kicker:"Memory",name:"Flashcards",desc:"Flip cards and mark what you know or still need to learn."},
+    {id:"weight-blitz",kicker:"Mass memory",name:"Atomic Weight Blitz",desc:"Focused atomic-weight questions using names, symbols, and atomic numbers."},
+    {id:"weight-match",kicker:"Mass pairs",name:"Weight Match",desc:"Match elements, symbols, or atomic numbers directly to atomic weights."},
+    {id:"weight-compare",kicker:"Light vs heavy",name:"Weight Compare",desc:"Choose the lightest or heaviest element from four close choices."}
   ];
   const ACHIEVEMENTS = {
     first:{name:"First Reaction",desc:"Answer your first question correctly."},
@@ -366,7 +379,7 @@
   const STORE_KEY = "elemental-study-v1";
   const defaultState = () => ({
     stats:{answered:0,correct:0,wrong:0,currentStreak:0,bestStreak:0},
-    elementStats:{},achievements:{},settings:{sound:true,studySet:"118",mixed:true,adaptive:true,questionTypes:Object.fromEntries(QUESTION_TYPES.map(([k])=>[k,true])),categories:[],custom:[]}
+    elementStats:{},achievements:{},settings:{sound:true,studySet:"118",mixed:true,adaptive:true,questionTypes:Object.fromEntries(QUESTION_TYPES.map(([k])=>[k,true])),challengePromptTypes:{name:true,symbol:true,number:true,weight:true},categories:[],custom:[]}
   });
   let state = loadState();
   let activeScreen = "homeScreen";
@@ -393,7 +406,7 @@
         stats:{...base.stats,...saved.stats},
         elementStats:{...saved.elementStats},
         achievements:{...saved.achievements},
-        settings:{...base.settings,...saved.settings,questionTypes:{...base.settings.questionTypes,...(saved.settings?.questionTypes||{})}}
+        settings:{...base.settings,...saved.settings,questionTypes:{...base.settings.questionTypes,...(saved.settings?.questionTypes||{})},challengePromptTypes:{...base.settings.challengePromptTypes,...(saved.settings?.challengePromptTypes||{})}}
       };
     }catch{return defaultState()}
   }
@@ -443,23 +456,31 @@
     selectedMode=mode;const m=MODES.find(x=>x.id===mode);qs('#setupTitle').textContent=m.name;qs('#setupSubtitle').textContent=m.desc;
     qs('#studySetSelect').value=state.settings.studySet;qs('#mixedMode').checked=state.settings.mixed;qs('#adaptiveMode').checked=state.settings.adaptive;
     updateStudySetVisibility();renderModeOptions();
-    qs('#questionSettingsCard').classList.toggle('hidden',['match','challenge','flash'].includes(mode));
+    qs('#questionSettingsCard').classList.toggle('hidden',['match','challenge','flash','weight-blitz','weight-match','weight-compare'].includes(mode));
     showScreen('setupScreen');
   }
   function renderModeOptions(){
     let html='This mode uses your study set above.';
     if(selectedMode==='quick'||selectedMode==='type') html=`<div class="field"><label>Questions per session</label><select id="sessionLength"><option value="10">10</option><option value="20" selected>20</option><option value="30">30</option></select></div>`;
     if(selectedMode==='speed') html='<strong>60-second timer</strong><div class="small-note" style="margin-top:6px">+100 per correct answer, with a +25 bonus every third answer in a streak.</div>';
-    if(selectedMode==='match') html=`<div class="field"><label>Matching style</label><select id="matchStyle"><option value="name-symbol">Element ↔ Symbol</option><option value="name-number">Element ↔ Atomic Number</option><option value="symbol-number">Symbol ↔ Atomic Number</option></select></div>`;
-    if(selectedMode==='challenge') html='<strong>10 table prompts</strong><div class="small-note" style="margin-top:6px">Prompts rotate between element names, symbols, and atomic numbers.</div>';
-    if(selectedMode==='flash') html=`<div class="field"><label>Flashcard style</label><select id="flashStyle"><option value="symbol">Symbol → Element + Number</option><option value="name">Element → Symbol + Number</option><option value="number">Number → Element + Symbol</option><option value="mixed" selected>Mixed</option></select></div><div class="small-note">20 cards per session. Still Learning cards are weighted more often.</div>`;
+    if(selectedMode==='match') html=`<div class="field"><label>Matching style</label><select id="matchStyle"><option value="name-symbol">Element ↔ Symbol</option><option value="name-number">Element ↔ Atomic Number</option><option value="symbol-number">Symbol ↔ Atomic Number</option><option value="name-weight">Element ↔ Atomic Weight</option><option value="symbol-weight">Symbol ↔ Atomic Weight</option><option value="number-weight">Atomic Number ↔ Atomic Weight</option></select></div>`;
+    if(selectedMode==='challenge') html=`<div class="field"><label>Challenge prompts</label><div class="small-note" style="margin:0 0 8px">Choose exactly what the table can ask you to find. Mix any options you want.</div></div>
+      ${[["name","Element names"],["symbol","Chemical symbols"],["number","Atomic numbers"],["weight","Atomic weights"]].map(([k,n])=>`<div class="toggle-row"><div><strong>${n}</strong><div class="small-note">${k==='name'?'Example: Find Magnesium':k==='symbol'?'Example: Find Au':k==='number'?'Example: Find element #79':'Example: Find atomic weight 24.305'}</div></div><label class="toggle"><input class="challenge-type" type="checkbox" value="${k}" ${state.settings.challengePromptTypes[k]?'checked':''}><span></span></label></div>`).join('')}
+      <div class="small-note" style="margin-top:10px"><strong>10 table prompts</strong> using only the enabled types. Atomic-weight prompts use weights that identify one element uniquely.</div>`;
+    if(selectedMode==='flash') html=`<div class="field"><label>Flashcard style</label><select id="flashStyle"><option value="symbol">Symbol → Element + Number + Weight</option><option value="name">Element → Symbol + Number + Weight</option><option value="number">Number → Element + Symbol + Weight</option><option value="weight">Weight → Element + Symbol + Number</option><option value="mixed" selected>Mixed</option></select></div><div class="small-note">20 cards per session. Still Learning cards are weighted more often.</div>`;
+    if(selectedMode==='weight-blitz') html=`<div class="field"><label>Question direction</label><select id="weightDirection"><option value="to-weight">Name / Symbol / Number → Weight</option><option value="from-weight">Weight → Name / Symbol / Number</option><option value="mixed" selected>Mixed weight questions</option></select></div><div class="field"><label>Questions per session</label><select id="sessionLength"><option value="10">10</option><option value="20" selected>20</option><option value="30">30</option></select></div><div class="small-note">For radioactive elements, bracketed values are representative isotope mass numbers.</div>`;
+    if(selectedMode==='weight-match') html=`<div class="field"><label>Matching style</label><select id="matchStyle"><option value="name-weight">Element ↔ Atomic Weight</option><option value="symbol-weight">Symbol ↔ Atomic Weight</option><option value="number-weight">Atomic Number ↔ Atomic Weight</option></select></div><div class="small-note">Pairs use the atomic-weight value shown on this app.</div>`;
+    if(selectedMode==='weight-compare') html=`<div class="field"><label>Questions per session</label><select id="sessionLength"><option value="10">10</option><option value="15" selected>15</option><option value="20">20</option></select></div><div class="small-note">Pick the lightest or heaviest element among four nearby choices.</div>`;
     qs('#modeSpecificOptions').innerHTML=html;
   }
   function updateStudySetVisibility(){const v=qs('#studySetSelect').value;qs('#categoryChooser').classList.toggle('hidden',v!=='categories');qs('#customChooser').classList.toggle('hidden',v!=='custom');}
   function saveSetupState(){
     state.settings.studySet=qs('#studySetSelect').value;state.settings.mixed=qs('#mixedMode').checked;state.settings.adaptive=qs('#adaptiveMode').checked;
-    state.settings.questionTypes=Object.fromEntries(qsa('.qtype').map(x=>[x.value,x.checked]));state.settings.categories=qsa('#categoryChips input:checked').map(x=>x.value);state.settings.custom=qsa('#customElements input:checked').map(x=>Number(x.value));saveState();
+    state.settings.questionTypes=Object.fromEntries(qsa('.qtype').map(x=>[x.value,x.checked]));state.settings.categories=qsa('#categoryChips input:checked').map(x=>x.value);state.settings.custom=qsa('#customElements input:checked').map(x=>Number(x.value));
+    const challengeInputs=qsa('.challenge-type');if(challengeInputs.length)state.settings.challengePromptTypes=Object.fromEntries(challengeInputs.map(x=>[x.value,x.checked]));saveState();
   }
+  function enabledChallengeTypes(){return ['name','symbol','number','weight'].filter(k=>state.settings.challengePromptTypes?.[k]);}
+  function challengeWeightCandidates(pool){const counts={};elements.forEach(e=>counts[e.weightLabel]=(counts[e.weightLabel]||0)+1);return pool.filter(e=>counts[e.weightLabel]===1);}
   function buildPool(){
     const v=state.settings.studySet;let pool;
     if(/^\d+$/.test(v))pool=elements.slice(0,Number(v));
@@ -473,31 +494,44 @@
     if(!state.settings.adaptive)return sample(pool);
     const weighted=[];for(const e of pool){const s=statFor(e);const weight=Math.min(6,1+s.wrong*2+(mastery(e)==='learning'?1:0));for(let i=0;i<weight;i++)weighted.push(e)}return sample(weighted);
   }
+  function weightText(e){return e.weightLabel;}
+  function uniqueWeightPool(pool){const counts={};pool.forEach(e=>counts[e.weightLabel]=(counts[e.weightLabel]||0)+1);return pool.filter(e=>counts[e.weightLabel]===1)}
   function enabledQuestionTypes(){const a=QUESTION_TYPES.map(([k])=>k).filter(k=>state.settings.questionTypes[k]);return a.length?a:['name-symbol'];}
-  function makeQuestion(pool){
-    const types=enabledQuestionTypes();let type=state.settings.mixed?sample(types):types[0], e=weightedElement(pool), sig=`${e.number}-${type}`,guard=0;
-    while(sig===lastQuestionSignature&&guard++<10){e=weightedElement(pool);type=state.settings.mixed?sample(types):types[0];sig=`${e.number}-${type}`}
+  function weightTypesFromSetup(){const dir=qs('#weightDirection')?.value||'mixed';if(dir==='to-weight')return ['name-weight','symbol-weight','number-weight'];if(dir==='from-weight')return ['weight-name','weight-symbol','weight-number'];return ['name-weight','symbol-weight','number-weight','weight-name','weight-symbol','weight-number']}
+  function makeQuestion(pool,forcedTypes=null){
+    const types=forcedTypes?.length?forcedTypes:enabledQuestionTypes();let type=state.settings.mixed||forcedTypes?sample(types):types[0], e=weightedElement(pool), sig=`${e.number}-${type}`,guard=0;
+    if(type.startsWith('weight-')){const unique=uniqueWeightPool(pool);if(unique.length)e=weightedElement(unique);else type='name-weight'}
+    sig=`${e.number}-${type}`;
+    while(sig===lastQuestionSignature&&guard++<10){type=state.settings.mixed||forcedTypes?sample(types):types[0];let source=pool;if(type.startsWith('weight-')){const unique=uniqueWeightPool(pool);if(unique.length)source=unique;else type='name-weight'}e=weightedElement(source);sig=`${e.number}-${type}`}
     lastQuestionSignature=sig;
-    const q={type,e,prompt:'',answer:'',answerKind:'text'};
-    if(type==='name-symbol'){q.prompt=`What is the symbol for ${e.name}?`;q.answer=e.symbol}
-    if(type==='symbol-name'){q.prompt=`What element has the symbol ${e.symbol}?`;q.answer=e.name}
-    if(type==='name-number'){q.prompt=`What is the atomic number of ${e.name}?`;q.answer=String(e.number);q.answerKind='number'}
-    if(type==='number-name'){q.prompt=`What element is atomic number ${e.number}?`;q.answer=e.name}
-    if(type==='symbol-number'){q.prompt=`What is the atomic number of ${e.symbol}?`;q.answer=String(e.number);q.answerKind='number'}
-    if(type==='number-symbol'){q.prompt=`What is the symbol for element #${e.number}?`;q.answer=e.symbol}
+    const q={type,e,prompt:'',answer:'',answerKind:'text',answerField:''};
+    if(type==='name-symbol'){q.prompt=`What is the symbol for ${e.name}?`;q.answer=e.symbol;q.answerField='symbol'}
+    if(type==='symbol-name'){q.prompt=`What element has the symbol ${e.symbol}?`;q.answer=e.name;q.answerField='name'}
+    if(type==='name-number'){q.prompt=`What is the atomic number of ${e.name}?`;q.answer=String(e.number);q.answerKind='number';q.answerField='number'}
+    if(type==='number-name'){q.prompt=`What element is atomic number ${e.number}?`;q.answer=e.name;q.answerField='name'}
+    if(type==='symbol-number'){q.prompt=`What is the atomic number of ${e.symbol}?`;q.answer=String(e.number);q.answerKind='number';q.answerField='number'}
+    if(type==='number-symbol'){q.prompt=`What is the symbol for element #${e.number}?`;q.answer=e.symbol;q.answerField='symbol'}
+    if(type==='name-weight'){q.prompt=`What is the atomic weight of ${e.name}?`;q.answer=e.weightLabel;q.answerKind='weight';q.answerField='weight'}
+    if(type==='symbol-weight'){q.prompt=`What is the atomic weight of ${e.symbol}?`;q.answer=e.weightLabel;q.answerKind='weight';q.answerField='weight'}
+    if(type==='number-weight'){q.prompt=`What is the atomic weight of element #${e.number}?`;q.answer=e.weightLabel;q.answerKind='weight';q.answerField='weight'}
+    if(type==='weight-name'){q.prompt=`Which element has atomic weight ${e.weightLabel}?`;q.answer=e.name;q.answerField='name'}
+    if(type==='weight-symbol'){q.prompt=`What is the symbol for the element with atomic weight ${e.weightLabel}?`;q.answer=e.symbol;q.answerField='symbol'}
+    if(type==='weight-number'){q.prompt=`What is the atomic number of the element with atomic weight ${e.weightLabel}?`;q.answer=String(e.number);q.answerKind='number';q.answerField='number'}
     return q;
   }
   function plausibleChoices(q,pool){
-    const field=q.type.includes('symbol')&&q.type.endsWith('symbol')?'symbol':q.type.endsWith('name')?'name':'number';
-    const correct=field==='number'?q.e.number:q.e[field];let candidates=pool.filter(e=>e.number!==q.e.number);
+    const field=q.answerField||'number';const correct=field==='weight'?q.e.weightLabel:field==='number'?String(q.e.number):q.e[field];let candidates=pool.filter(e=>e.number!==q.e.number);
     if(field==='number')candidates=candidates.sort((a,b)=>Math.abs(a.number-q.e.number)-Math.abs(b.number-q.e.number)).slice(0,18);
+    else if(field==='weight')candidates=candidates.sort((a,b)=>Math.abs(a.weight-q.e.weight)-Math.abs(b.weight-q.e.weight)).filter((e,i,a)=>a.findIndex(x=>x.weightLabel===e.weightLabel)===i).slice(0,18);
     else if(field==='symbol')candidates=candidates.filter(e=>Math.abs(e.symbol.length-q.e.symbol.length)<=1);
     if(candidates.length<3){const used=new Set(candidates.map(e=>e.number));used.add(q.e.number);candidates=candidates.concat(shuffle(elements.filter(e=>!used.has(e.number))).slice(0,3-candidates.length));}
-    const distractors=shuffle(candidates).slice(0,3).map(e=>field==='number'?String(e.number):e[field]);return shuffle([String(correct),...distractors]);
+    const vals=shuffle(candidates).map(e=>field==='weight'?e.weightLabel:field==='number'?String(e.number):e[field]).filter((v,i,a)=>a.indexOf(v)===i).slice(0,3);return shuffle([String(correct),...vals]);
   }
   function beginSelectedGame(){
+    if(selectedMode==='challenge' && qsa('.challenge-type:checked').length===0){toast('Choose a prompt type','Enable at least one Periodic Table Challenge option before starting.');return;}
     saveSetupState();currentPool=buildPool();
-    if(selectedMode==='quick')startQuiz(false);else if(selectedMode==='type')startQuiz(true);else if(selectedMode==='speed')startSpeed();else if(selectedMode==='match')startMatch();else if(selectedMode==='challenge')startChallenge();else startFlash();
+    if(selectedMode==='challenge' && enabledChallengeTypes().length===1 && enabledChallengeTypes()[0]==='weight' && challengeWeightCandidates(currentPool).length===0){toast('No unique weights in this set','Choose another prompt type or a different study set for Atomic Weight prompts.');return;}
+    if(selectedMode==='quick')startQuiz(false);else if(selectedMode==='type')startQuiz(true);else if(selectedMode==='speed')startSpeed();else if(selectedMode==='match')startMatch(false);else if(selectedMode==='challenge')startChallenge();else if(selectedMode==='flash')startFlash();else if(selectedMode==='weight-blitz')startWeightBlitz();else if(selectedMode==='weight-match')startMatch(true);else if(selectedMode==='weight-compare')startWeightCompare();
   }
   function baseSession(mode,target){return {mode,target,index:0,correct:0,wrong:0,bestStreak:0,streak:0,score:0,mistakes:new Set(),seen:new Set()}}
   function startQuiz(typed){
@@ -505,6 +539,18 @@
   }
   function startSpeed(){
     currentSession=baseSession('speed',Infinity);qs('#gameTitle').textContent='Speed Round';qs('#gameSubtitle').textContent='60 seconds · +100 points per correct answer';qs('#typeWrap').classList.add('hidden');qs('#answers').classList.remove('hidden');qs('#timerWrap').classList.remove('hidden');showScreen('gameScreen');speedEndAt=Date.now()+60000;nextQuestion();speedTimer=setInterval(updateSpeedTimer,100);updateSpeedTimer();
+  }
+  function startWeightBlitz(){
+    const target=Number(qs('#sessionLength')?.value||20);currentSession=baseSession('weight-blitz',target);currentSession.forceTypes=weightTypesFromSetup();qs('#gameTitle').textContent='Atomic Weight Blitz';qs('#gameSubtitle').textContent=`${target} focused weight questions · ${currentPool.length} elements`;qs('#timerWrap').classList.add('hidden');qs('#typeWrap').classList.add('hidden');qs('#answers').classList.remove('hidden');showScreen('gameScreen');nextQuestion();
+  }
+  function startWeightCompare(){
+    const target=Number(qs('#sessionLength')?.value||15);currentSession=baseSession('weight-compare',target);qs('#gameTitle').textContent='Weight Compare';qs('#gameSubtitle').textContent=`${target} questions · choose the lightest or heaviest element`;qs('#timerWrap').classList.add('hidden');qs('#typeWrap').classList.add('hidden');qs('#answers').classList.remove('hidden');showScreen('gameScreen');nextQuestion();
+  }
+  function makeWeightCompareQuestion(pool){
+    const source=pool.length>=4?pool:elements, anchor=weightedElement(source), nearby=source.filter(e=>e.number!==anchor.number).sort((a,b)=>Math.abs(a.weight-anchor.weight)-Math.abs(b.weight-anchor.weight));
+    let choices=[anchor,...shuffle(nearby.slice(0,Math.min(10,nearby.length))).slice(0,3)];if(choices.length<4){const used=new Set(choices.map(e=>e.number));choices=choices.concat(shuffle(elements.filter(e=>!used.has(e.number))).slice(0,4-choices.length))}
+    const wantHeavy=Math.random()<.5, sorted=choices.slice().sort((a,b)=>a.weight-b.weight), e=wantHeavy?sorted[sorted.length-1]:sorted[0];
+    return {type:'weight-compare',e,prompt:`Which element has the ${wantHeavy?'greatest':'smallest'} atomic weight?`,answer:e.name,answerField:'name',answerKind:'text',compareChoices:shuffle(choices)};
   }
   function updateSpeedTimer(){
     const remain=Math.max(0,speedEndAt-Date.now()),sec=Math.ceil(remain/1000),p=remain/60000*100;qs('#timerFill').style.width=p+'%';qs('#timerFill').classList.toggle('danger',sec<=10);renderHud(sec);
@@ -514,15 +560,16 @@
     const s=currentSession;if(!s)return;const accuracy=pct(s.correct,s.correct+s.wrong);let items=[['Score',s.mode==='speed'?s.score:s.correct],['Question',s.mode==='speed'?s.correct+s.wrong+1:`${Math.min(s.index+1,s.target)}/${s.target}`],['Streak',s.streak],['Accuracy',accuracy+'%']];if(s.mode==='speed'&&timeLeft!==null)items[1]=['Time',timeLeft+'s'];qs('#hud').innerHTML=items.map(([a,b],i)=>`<div class="hud-item"><span>${a}</span><strong ${i===0?'id="scoreHud"':''}>${b}</strong></div>`).join('');
   }
   function nextQuestion(){
-    if(!currentSession)return;if(currentSession.mode!=='speed'&&currentSession.index>=currentSession.target)return finishSession();answerLocked=false;currentQuestion=makeQuestion(currentPool);currentSession.seen.add(currentQuestion.e.number);qs('#questionMeta').textContent=QUESTION_TYPES.find(([k])=>k===currentQuestion.type)?.[1]||'';qs('#questionText').textContent=currentQuestion.prompt;qs('#feedback').className='feedback';qs('#feedback').innerHTML='';renderHud(currentSession.mode==='speed'?Math.ceil(Math.max(0,speedEndAt-Date.now())/1000):null);
-    if(currentSession.mode==='type'){qs('#typeInput').value='';setTimeout(()=>qs('#typeInput').focus(),50)}else{qs('#answers').innerHTML=plausibleChoices(currentQuestion,currentPool).map((c,i)=>`<button class="answer-btn" data-answer="${esc(c)}">${esc(c)}<span class="key">${i+1}</span></button>`).join('');qsa('#answers .answer-btn').forEach(b=>b.addEventListener('click',()=>submitAnswer(b.dataset.answer,b)));}
+    if(!currentSession)return;if(currentSession.mode!=='speed'&&currentSession.index>=currentSession.target)return finishSession();answerLocked=false;currentQuestion=currentSession.mode==='weight-compare'?makeWeightCompareQuestion(currentPool):makeQuestion(currentPool,currentSession.forceTypes||null);currentSession.seen.add(currentQuestion.e.number);qs('#questionMeta').textContent=currentQuestion.type==='weight-compare'?'Compare Atomic Weights':QUESTION_TYPES.find(([k])=>k===currentQuestion.type)?.[1]||'';qs('#questionText').textContent=currentQuestion.prompt;qs('#feedback').className='feedback';qs('#feedback').innerHTML='';renderHud(currentSession.mode==='speed'?Math.ceil(Math.max(0,speedEndAt-Date.now())/1000):null);
+    if(currentSession.mode==='type'){qs('#typeInput').value='';setTimeout(()=>qs('#typeInput').focus(),50)}else{const choices=currentQuestion.compareChoices?currentQuestion.compareChoices.map(e=>e.name):plausibleChoices(currentQuestion,currentPool);qs('#answers').innerHTML=choices.map((c,i)=>`<button class="answer-btn" data-answer="${esc(c)}">${esc(c)}<span class="key">${i+1}</span></button>`).join('');qsa('#answers .answer-btn').forEach(b=>b.addEventListener('click',()=>submitAnswer(b.dataset.answer,b)));}
   }
   function normalize(v){return String(v).trim().toLowerCase().replace(/\s+/g,' ')}
   function submitTyped(){if(answerLocked||!currentQuestion)return;const v=qs('#typeInput').value.trim();if(v)submitAnswer(v,null)}
   function submitAnswer(value,button){
-    if(answerLocked||!currentQuestion)return;answerLocked=true;const correct=normalize(value)===normalize(currentQuestion.answer),e=currentQuestion.e;
+    if(answerLocked||!currentQuestion)return;answerLocked=true;let correct=normalize(value)===normalize(currentQuestion.answer),e=currentQuestion.e;
+    if(currentQuestion.answerKind==='weight'&&!correct){const entered=Number(String(value).replace(/[\[\]]/g,''));if(Number.isFinite(entered))correct=Math.abs(entered-e.weight)<=0.05}
     if(button){qsa('#answers .answer-btn').forEach(b=>{if(normalize(b.dataset.answer)===normalize(currentQuestion.answer))b.classList.add('correct')});if(!correct)button.classList.add('wrong')}
-    recordResponse(e,correct,currentSession);const f=qs('#feedback');f.className=`feedback show ${correct?'good':'bad'}`;f.innerHTML=correct?`<strong>✓ Correct</strong><br>${e.symbol} = ${e.name}<br>Atomic Number <strong>${e.number}</strong>`:`<strong>✕ Not quite</strong><br>You answered <strong>${esc(value)}</strong><br>The correct answer is <strong>${e.symbol} — ${e.name} — Atomic #${e.number}</strong>`;
+    recordResponse(e,correct,currentSession);const f=qs('#feedback');f.className=`feedback show ${correct?'good':'bad'}`;f.innerHTML=correct?`<strong>✓ Correct</strong><br>${e.symbol} = ${e.name}<br>Atomic #<strong>${e.number}</strong> · Atomic Weight <strong>${e.weightLabel}</strong>`:`<strong>✕ Not quite</strong><br>You answered <strong>${esc(value)}</strong><br>The correct answer is <strong>${e.symbol} — ${e.name} — #${e.number} — ${e.weightLabel} u</strong>`;
     sound(correct?'correct':'wrong');if(currentSession.mode==='speed'&&correct){qs('#scoreHud')?.classList.add('score-pop');setTimeout(()=>qs('#scoreHud')?.classList.remove('score-pop'),330)}
     const delay=currentSession.mode==='speed'?420:900;if(nextTimer)clearTimeout(nextTimer);nextTimer=setTimeout(()=>{nextTimer=null;if(currentSession&& (currentSession.mode!=='speed'||Date.now()<speedEndAt))nextQuestion()},delay);
   }
@@ -534,10 +581,10 @@
     if(speedTimer){clearInterval(speedTimer);speedTimer=null}if(nextTimer){clearTimeout(nextTimer);nextTimer=null}if(!currentSession)return;checkAchievements(extra);renderResults(currentSession);showScreen('resultsScreen');
   }
 
-  function startMatch(){
-    const style=qs('#matchStyle')?.value||'name-symbol', pool=shuffle(currentPool).slice(0,Math.min(7,currentPool.length));matchState={style,pool,selectedL:null,selectedR:null,matches:0,wrong:0,streak:0,bestStreak:0,start:Date.now(),mistakes:new Set()};showScreen('matchScreen');qs('#matchSubtitle').textContent=QUESTION_TYPES.find(([k])=>k===style)?.[1].replace('→','↔')||'Match pairs';renderMatch();
+  function startMatch(weightOnly=false){
+    const style=qs('#matchStyle')?.value||(weightOnly?'name-weight':'name-symbol');let matchPool=style.includes('weight')?uniqueWeightPool(currentPool):currentPool;if(matchPool.length<2)matchPool=style.includes('weight')?uniqueWeightPool(elements):elements;const pool=shuffle(matchPool).slice(0,Math.min(7,matchPool.length));matchState={style,pool,weightOnly,selectedL:null,selectedR:null,matches:0,wrong:0,streak:0,bestStreak:0,start:Date.now(),mistakes:new Set()};showScreen('matchScreen');qs('#matchScreen h2').textContent=weightOnly?'Weight Match':'Match Mode';qs('#matchSubtitle').textContent=QUESTION_TYPES.find(([k])=>k===style)?.[1].replace('→','↔')||'Match pairs';renderMatch();
   }
-  function matchValues(e,side){const [a,b]=matchState.style.split('-');const key=side==='left'?a:b;return key==='name'?e.name:key==='symbol'?e.symbol:String(e.number)}
+  function matchValues(e,side){const [a,b]=matchState.style.split('-');const key=side==='left'?a:b;return key==='name'?e.name:key==='symbol'?e.symbol:key==='weight'?e.weightLabel:String(e.number)}
   function renderMatch(){
     const left=matchState.pool.map(e=>({e,v:matchValues(e,'left')})),right=shuffle(matchState.pool.map(e=>({e,v:matchValues(e,'right')})));qs('#matchLeft').innerHTML=left.map(x=>`<button class="match-card" data-side="left" data-id="${x.e.number}">${esc(x.v)}</button>`).join('');qs('#matchRight').innerHTML=right.map(x=>`<button class="match-card" data-side="right" data-id="${x.e.number}">${esc(x.v)}</button>`).join('');qsa('.match-card').forEach(b=>b.addEventListener('click',()=>selectMatch(b)));updateMatchHud();
   }
@@ -546,17 +593,17 @@
     if(a.id===b.id){a.btn.classList.add('done');b.btn.classList.add('done');a.btn.classList.remove('selected');b.btn.classList.remove('selected');matchState.matches++;matchState.streak++;matchState.bestStreak=Math.max(matchState.bestStreak,matchState.streak);const e=byNumber.get(a.id);const temp=baseSession('match',matchState.pool.length);recordResponse(e,true,temp);sound('correct');if(matchState.matches===matchState.pool.length)setTimeout(()=>finishMatch(),350)}else{a.btn.classList.add('bad');b.btn.classList.add('bad');matchState.wrong++;matchState.streak=0;matchState.mistakes.add(a.id);matchState.mistakes.add(b.id);const temp=baseSession('match',matchState.pool.length);recordResponse(byNumber.get(a.id),false,temp);sound('wrong');setTimeout(()=>{[a.btn,b.btn].forEach(x=>x.classList.remove('bad','selected'))},350)}matchState.selectedL=matchState.selectedR=null;updateMatchHud();
   }
   function updateMatchHud(){const acc=pct(matchState.matches,matchState.matches+matchState.wrong);qs('#matchHud').innerHTML=[['Matches',`${matchState.matches}/${matchState.pool.length}`],['Wrong',matchState.wrong],['Streak',matchState.streak],['Accuracy',acc+'%']].map(([a,b])=>`<div class="hud-item"><span>${a}</span><strong>${b}</strong></div>`).join('')}
-  function finishMatch(){currentSession={...baseSession('match',matchState.pool.length),correct:matchState.matches,wrong:matchState.wrong,bestStreak:matchState.bestStreak,mistakes:matchState.mistakes,score:matchState.matches};renderResults(currentSession);showScreen('resultsScreen')}
+  function finishMatch(){currentSession={...baseSession(matchState.weightOnly?'weight-match':'match',matchState.pool.length),correct:matchState.matches,wrong:matchState.wrong,bestStreak:matchState.bestStreak,mistakes:matchState.mistakes,score:matchState.matches};renderResults(currentSession);showScreen('resultsScreen')}
 
   function startChallenge(){challengeState={target:10,index:0,correct:0,wrong:0,streak:0,bestStreak:0,mistakes:new Set(),current:null,locked:false};showScreen('challengeScreen');renderPeriodicTable(qs('#challengeTable'),true);nextChallenge();}
-  function nextChallenge(){if(challengeState.index>=challengeState.target)return finishChallenge();challengeState.locked=false;const e=weightedElement(currentPool),kind=sample(['name','symbol','number']);challengeState.current=e;qs('#challengePrompt').textContent=kind==='name'?`Find ${e.name}`:kind==='symbol'?`Find ${e.symbol}`:`Find element #${e.number}`;qs('#challengeFeedback').className='feedback';qsa('#challengeTable .el-tile').forEach(t=>t.classList.remove('correct-pick','wrong-pick'));renderChallengeHud();}
-  function handleChallengePick(el,dom){if(challengeState.locked)return;const target=challengeState.current,correct=el.number===target.number;challengeState.locked=true;if(correct){dom.classList.add('correct-pick');challengeState.correct++;challengeState.streak++;challengeState.bestStreak=Math.max(challengeState.bestStreak,challengeState.streak)}else{dom.classList.add('wrong-pick');challengeState.wrong++;challengeState.streak=0;challengeState.mistakes.add(target.number);const right=qs(`#challengeTable .el-tile[data-z="${target.number}"]`);right?.classList.add('correct-pick')}const temp=baseSession('challenge',10);recordResponse(target,correct,temp);const f=qs('#challengeFeedback');f.className=`feedback show ${correct?'good':'bad'}`;f.innerHTML=correct?`<strong>✓ Correct</strong> — ${target.symbol} = ${target.name}, Atomic #${target.number}`:`<strong>✕ Not quite</strong> — ${target.symbol} — ${target.name} — Atomic #${target.number}`;sound(correct?'correct':'wrong');challengeState.index++;renderChallengeHud();setTimeout(nextChallenge,800)}
+  function nextChallenge(){if(challengeState.index>=challengeState.target)return finishChallenge();challengeState.locked=false;let kinds=enabledChallengeTypes();if(!kinds.length)kinds=['name'];let kind=sample(kinds),source=currentPool;if(kind==='weight'){const unique=challengeWeightCandidates(currentPool);if(unique.length)source=unique;else{const nonWeight=kinds.filter(k=>k!=='weight');kind=nonWeight.length?sample(nonWeight):'name';}}const e=weightedElement(source);challengeState.current=e;challengeState.kind=kind;qs('#challengePrompt').textContent=kind==='name'?`Find ${e.name}`:kind==='symbol'?`Find ${e.symbol}`:kind==='weight'?`Find atomic weight ${e.weightLabel}`:`Find element #${e.number}`;qs('#challengeFeedback').className='feedback';const table=qs('#challengeTable');table.classList.remove('hide-name','hide-symbol','hide-number','hide-weight');table.classList.add(`hide-${kind}`);qsa('#challengeTable .el-tile').forEach(t=>t.classList.remove('correct-pick','wrong-pick'));renderChallengeHud();}
+  function handleChallengePick(el,dom){if(challengeState.locked)return;const target=challengeState.current,correct=el.number===target.number;challengeState.locked=true;if(correct){dom.classList.add('correct-pick');challengeState.correct++;challengeState.streak++;challengeState.bestStreak=Math.max(challengeState.bestStreak,challengeState.streak)}else{dom.classList.add('wrong-pick');challengeState.wrong++;challengeState.streak=0;challengeState.mistakes.add(target.number);const right=qs(`#challengeTable .el-tile[data-z="${target.number}"]`);right?.classList.add('correct-pick')}qs('#challengeTable').classList.remove('hide-name','hide-symbol','hide-number','hide-weight');const temp=baseSession('challenge',10);recordResponse(target,correct,temp);const f=qs('#challengeFeedback');f.className=`feedback show ${correct?'good':'bad'}`;f.innerHTML=correct?`<strong>✓ Correct</strong> — ${target.symbol} = ${target.name}, Atomic #${target.number}, Weight ${target.weightLabel}`:`<strong>✕ Not quite</strong> — ${target.symbol} — ${target.name} — Atomic #${target.number} — Weight ${target.weightLabel}`;sound(correct?'correct':'wrong');challengeState.index++;renderChallengeHud();setTimeout(nextChallenge,800)}
   function renderChallengeHud(){qs('#challengeHud').innerHTML=[['Correct',challengeState.correct],['Question',`${Math.min(challengeState.index+1,challengeState.target)}/${challengeState.target}`],['Streak',challengeState.streak],['Accuracy',pct(challengeState.correct,challengeState.correct+challengeState.wrong)+'%']].map(([a,b])=>`<div class="hud-item"><span>${a}</span><strong>${b}</strong></div>`).join('')}
   function finishChallenge(){currentSession={...baseSession('challenge',10),correct:challengeState.correct,wrong:challengeState.wrong,bestStreak:challengeState.bestStreak,mistakes:challengeState.mistakes,score:challengeState.correct};renderResults(currentSession);showScreen('resultsScreen')}
 
   function startFlash(){const style=qs('#flashStyle')?.value||'mixed';flashState={style,target:20,index:0,got:0,learning:0,streak:0,bestStreak:0,mistakes:new Set(),current:null};showScreen('flashScreen');nextFlash();}
   function nextFlash(){if(flashState.index>=flashState.target)return finishFlash();const weak=currentPool.filter(e=>statFor(e).wrong>statFor(e).correct);flashState.current=(weak.length&&Math.random()<.55)?sample(weak):weightedElement(currentPool);qs('#flashcard').classList.remove('flipped');renderFlashCard();renderFlashHud();}
-  function renderFlashCard(){const e=flashState.current,style=flashState.style==='mixed'?sample(['symbol','name','number']):flashState.style;let front,back;if(style==='symbol'){front=e.symbol;back=`<div class="flash-main" style="font-size:48px">${e.name}</div><div class="flash-sub">Atomic Number: ${e.number}</div>`}else if(style==='name'){front=e.name;back=`<div class="flash-main">${e.symbol}</div><div class="flash-sub">Atomic Number: ${e.number}</div>`}else{front=String(e.number);back=`<div class="flash-main">${e.symbol}</div><div class="flash-sub">${e.name}</div>`}qs('#flashFront').innerHTML=`<div class="small-note">Click or press Space to flip</div><div class="flash-main">${esc(front)}</div>`;qs('#flashBack').innerHTML=back;}
+  function renderFlashCard(){const e=flashState.current,style=flashState.style==='mixed'?sample(['symbol','name','number','weight']):flashState.style;let front,back;if(style==='symbol'){front=e.symbol;back=`<div class="flash-main" style="font-size:48px">${e.name}</div><div class="flash-sub">Atomic Number: ${e.number} · Atomic Weight: ${e.weightLabel}</div>`}else if(style==='name'){front=e.name;back=`<div class="flash-main">${e.symbol}</div><div class="flash-sub">Atomic Number: ${e.number} · Atomic Weight: ${e.weightLabel}</div>`}else if(style==='weight'){front=e.weightLabel;back=`<div class="flash-main">${e.symbol}</div><div class="flash-sub">${e.name} · Atomic Number: ${e.number}</div>`}else{front=String(e.number);back=`<div class="flash-main">${e.symbol}</div><div class="flash-sub">${e.name} · Atomic Weight: ${e.weightLabel}</div>`}qs('#flashFront').innerHTML=`<div class="small-note">Click or press Space to flip</div><div class="flash-main">${esc(front)}</div>`;qs('#flashBack').innerHTML=back;}
   function flashRate(got){const e=flashState.current;if(got){flashState.got++;flashState.streak++;flashState.bestStreak=Math.max(flashState.bestStreak,flashState.streak)}else{flashState.learning++;flashState.streak=0;flashState.mistakes.add(e.number)}const temp=baseSession('flash',20);recordResponse(e,got,temp);sound(got?'correct':'wrong');flashState.index++;nextFlash();}
   function renderFlashHud(){qs('#flashHud').innerHTML=[['Got It',flashState.got],['Card',`${Math.min(flashState.index+1,20)}/20`],['Streak',flashState.streak],['Learning',flashState.learning]].map(([a,b])=>`<div class="hud-item"><span>${a}</span><strong>${b}</strong></div>`).join('')}
   function finishFlash(){currentSession={...baseSession('flash',20),correct:flashState.got,wrong:flashState.learning,bestStreak:flashState.bestStreak,mistakes:flashState.mistakes,score:flashState.got};renderResults(currentSession);showScreen('resultsScreen')}
@@ -564,12 +611,12 @@
   function tilePlacement(e){if(e.category==='lanthanide')return {col:e.number-54,row:9};if(e.category==='actinide')return {col:e.number-86,row:10};return {col:e.group,row:e.period}}
   function renderPeriodicTable(container,challenge=false){
     const placeholders=`<div class="f-placeholder" style="grid-column:3;grid-row:6">57–71<br>Lanthanides</div><div class="f-placeholder" style="grid-column:3;grid-row:7">89–103<br>Actinides</div>`;
-    container.innerHTML=placeholders+elements.map(e=>{const p=tilePlacement(e);return `<button class="el-tile cat-${e.category}" data-z="${e.number}" style="grid-column:${p.col};grid-row:${p.row}"><div class="z">${e.number}</div><div class="sym">${e.symbol}</div><div class="nm">${e.name}</div></button>`}).join('');
+    container.innerHTML=placeholders+elements.map(e=>{const p=tilePlacement(e);return `<button class="el-tile cat-${e.category}" data-z="${e.number}" style="grid-column:${p.col};grid-row:${p.row}"><div class="z">${e.number}</div><div class="sym">${e.symbol}</div><div class="nm">${e.name}</div><div class="wt">${e.weightLabel} u</div></button>`}).join('');
     qsa(`#${container.id} .el-tile`).forEach(t=>t.addEventListener('click',()=>{const e=byNumber.get(Number(t.dataset.z));if(challenge)handleChallengePick(e,t);else{selectedInfoElement=e;renderElementInfo();qsa('#studyTable .el-tile').forEach(x=>x.classList.toggle('highlight',x===t));}}));
   }
   function renderStudy(){renderPeriodicTable(qs('#studyTable'),false);renderElementInfo();qs('#tableSearch').value='';}
-  function renderElementInfo(){const e=selectedInfoElement||elements[0],level=mastery(e);qs('#elementInfo').innerHTML=`<div class="info-hero"><div class="info-z">${e.number}</div><div><div class="info-sym">${e.symbol}</div><div class="info-name">${e.name}</div></div></div><div class="info-list"><div class="info-row"><span>Atomic Number</span><strong>${e.number}</strong></div><div class="info-row"><span>Group</span><strong>${e.group??'— (f-block)'}</strong></div><div class="info-row"><span>Period</span><strong>${e.period}</strong></div><div class="info-row"><span>Category</span><strong>${titleCaseCategory(e.category)}</strong></div></div><div class="mastery-badge level-${level}">${masteryLabel(level)}</div>`;}
-  function searchTable(){const q=normalize(qs('#tableSearch').value);let match=null;if(q){match=elements.find(e=>normalize(e.name)===q||normalize(e.symbol)===q||String(e.number)===q)||elements.find(e=>normalize(e.name).startsWith(q)||normalize(e.symbol).startsWith(q));}qsa('#studyTable .el-tile').forEach(t=>t.classList.toggle('highlight',!!match&&Number(t.dataset.z)===match.number));if(match){selectedInfoElement=match;renderElementInfo();const tile=qs(`#studyTable .el-tile[data-z="${match.number}"]`);tile?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'})}}
+  function renderElementInfo(){const e=selectedInfoElement||elements[0],level=mastery(e);qs('#elementInfo').innerHTML=`<div class="info-hero"><div class="info-z">${e.number}</div><div><div class="info-sym">${e.symbol}</div><div class="info-name">${e.name}</div></div></div><div class="info-list"><div class="info-row"><span>Atomic Number</span><strong>${e.number}</strong></div><div class="info-row"><span>Atomic Weight</span><strong>${e.weightLabel}</strong></div><div class="info-row"><span>Group</span><strong>${e.group??'— (f-block)'}</strong></div><div class="info-row"><span>Period</span><strong>${e.period}</strong></div><div class="info-row"><span>Category</span><strong>${titleCaseCategory(e.category)}</strong></div></div>${e.weightLabel.startsWith('[')?'<div class="small-note" style="margin-top:10px">Bracketed weight = representative isotope mass number (no standard atomic weight).</div>':''}<div class="mastery-badge level-${level}">${masteryLabel(level)}</div>`;}
+  function searchTable(){const q=normalize(qs('#tableSearch').value);let match=null;if(q){match=elements.find(e=>normalize(e.name)===q||normalize(e.symbol)===q||String(e.number)===q||normalize(e.weightLabel)===q||String(e.weight)===q)||elements.find(e=>normalize(e.name).startsWith(q)||normalize(e.symbol).startsWith(q)||normalize(e.weightLabel).startsWith(q));}qsa('#studyTable .el-tile').forEach(t=>t.classList.toggle('highlight',!!match&&Number(t.dataset.z)===match.number));if(match){selectedInfoElement=match;renderElementInfo();const tile=qs(`#studyTable .el-tile[data-z="${match.number}"]`);tile?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'})}}
 
   function renderProgress(){
     const s=state.stats,m=masteredCount();qs('#masteryGrid').innerHTML=elements.map(e=>{const level=mastery(e);return `<div class="mastery-cell level-${level}" title="${e.name} — ${masteryLabel(level)}"><strong>${e.symbol}</strong><span>${e.number}</span></div>`}).join('');
@@ -579,7 +626,7 @@
   }
   function renderResults(session){
     const accuracy=pct(session.correct,session.correct+session.wrong),mistakes=[...session.mistakes].map(n=>byNumber.get(n)).filter(Boolean).slice(0,8);let heading=accuracy>=90?'Great run.':accuracy>=75?'Nice work.':'Keep building it.';let scoreLine=session.mode==='speed'?`${session.score} points`:`${session.correct} / ${session.correct+session.wrong} correct`;
-    qs('#resultsCard').innerHTML=`<div class="result-hero"><h2>${heading}</h2><div class="result-score">${scoreLine}</div><div class="muted">${accuracy}% accuracy</div></div><div class="result-stats"><div class="result-stat"><span>Correct</span><strong>${session.correct}</strong></div><div class="result-stat"><span>Wrong</span><strong>${session.wrong}</strong></div><div class="result-stat"><span>Accuracy</span><strong>${accuracy}%</strong></div><div class="result-stat"><span>Best streak</span><strong>${session.bestStreak||0}</strong></div></div><h3>Needs Practice</h3>${mistakes.length?`<div class="needs-list">${mistakes.map(e=>`<div class="needs-item"><div class="needs-left"><div class="mini-symbol">${e.symbol}</div><div><strong>${e.name}</strong><div class="small-note">Atomic #${e.number}</div></div></div><span class="muted">${masteryLabel(mastery(e))}</span></div>`).join('')}</div>`:`<div class="empty">No mistakes in this session.</div>`}<div class="result-actions">${mistakes.length?'<button class="secondary-btn" id="practiceMistakesBtn">Practice Mistakes</button>':''}<button class="primary-btn" id="playAgainBtn">Play Again</button><button class="secondary-btn" id="changeModeBtn">Change Mode</button></div>`;
+    qs('#resultsCard').innerHTML=`<div class="result-hero"><h2>${heading}</h2><div class="result-score">${scoreLine}</div><div class="muted">${accuracy}% accuracy</div></div><div class="result-stats"><div class="result-stat"><span>Correct</span><strong>${session.correct}</strong></div><div class="result-stat"><span>Wrong</span><strong>${session.wrong}</strong></div><div class="result-stat"><span>Accuracy</span><strong>${accuracy}%</strong></div><div class="result-stat"><span>Best streak</span><strong>${session.bestStreak||0}</strong></div></div><h3>Needs Practice</h3>${mistakes.length?`<div class="needs-list">${mistakes.map(e=>`<div class="needs-item"><div class="needs-left"><div class="mini-symbol">${e.symbol}</div><div><strong>${e.name}</strong><div class="small-note">Atomic #${e.number} · Weight ${e.weightLabel}</div></div></div><span class="muted">${masteryLabel(mastery(e))}</span></div>`).join('')}</div>`:`<div class="empty">No mistakes in this session.</div>`}<div class="result-actions">${mistakes.length?'<button class="secondary-btn" id="practiceMistakesBtn">Practice Mistakes</button>':''}<button class="primary-btn" id="playAgainBtn">Play Again</button><button class="secondary-btn" id="changeModeBtn">Change Mode</button></div>`;
     qs('#playAgainBtn').onclick=()=>openSetup(selectedMode);qs('#changeModeBtn').onclick=()=>showScreen('homeScreen');const p=qs('#practiceMistakesBtn');if(p)p.onclick=()=>{state.settings.studySet='custom';state.settings.custom=mistakes.map(e=>e.number);saveState();selectedMode='quick';currentPool=buildPool();startQuiz(false)};
   }
   function practiceWeakElements(){state.settings.studySet='weak';saveState();selectedMode='quick';currentPool=buildPool();startQuiz(false)}
