@@ -633,10 +633,32 @@
   function smartPractice(){const weak=weakestElements(24);if(weak.length){state.settings.studySet='weak'}else{state.settings.studySet='20'}state.settings.adaptive=true;saveState();openSetup('quick')}
   function resetProgress(){if(!confirm('Reset all Elemental progress, mastery, achievements, and settings?'))return;state=defaultState();saveState();renderHome();renderProgress();toast('Progress reset','Elemental is back to a fresh start.')}
 
+  function goHome(){
+    history.replaceState(null,'',location.pathname+location.search);
+    quitActive();
+  }
+
+  function goStudy(){
+    if(location.hash!=='#study') history.replaceState(null,'','#study');
+    showScreen('studyScreen');
+  }
+
+  function goProgress(){
+    if(location.hash!=='#progress') history.replaceState(null,'','#progress');
+    showScreen('progressScreen');
+  }
+
+  function handleHash(){
+    const hash=location.hash.toLowerCase();
+    if(hash==='#study'||hash==='#studynav') return showScreen('studyScreen');
+    if(hash==='#progress'||hash==='#progressnav') return showScreen('progressScreen');
+    if(!hash||hash==='#home') return showScreen('homeScreen');
+  }
+
   function quitActive(){if(speedTimer){clearInterval(speedTimer);speedTimer=null}if(nextTimer){clearTimeout(nextTimer);nextTimer=null}currentSession=null;showScreen('homeScreen')}
 
   function bindEvents(){
-    qs('#brandHome').onclick=()=>quitActive();qs('#startStudying').onclick=()=>openSetup('quick');qs('#smartPracticeHome').onclick=smartPractice;qs('#studyNav').onclick=()=>showScreen('studyScreen');qs('#progressNav').onclick=()=>showScreen('progressScreen');qs('#soundToggle').onclick=()=>{state.settings.sound=!state.settings.sound;saveState();renderHome()};
+    qs('#brandHome').onclick=goHome;qs('#startStudying').onclick=()=>openSetup('quick');qs('#smartPracticeHome').onclick=smartPractice;qs('#studyNav').onclick=goStudy;qs('#progressNav').onclick=goProgress;qs('#soundToggle').onclick=()=>{state.settings.sound=!state.settings.sound;saveState();renderHome()};
     qsa('[data-back="home"]').forEach(b=>b.onclick=()=>showScreen('homeScreen'));qs('#studySetSelect').onchange=updateStudySetVisibility;qs('#beginGame').onclick=beginSelectedGame;qs('#quitGame').onclick=quitActive;qs('#quitMatch').onclick=quitActive;qs('#quitChallenge').onclick=quitActive;qs('#quitFlash').onclick=quitActive;qs('#submitType').onclick=submitTyped;qs('#typeInput').addEventListener('keydown',e=>{if(e.key==='Enter')submitTyped()});qs('#flashcard').onclick=()=>qs('#flashcard').classList.toggle('flipped');qs('#stillLearning').onclick=()=>flashState&&flashRate(false);qs('#gotIt').onclick=()=>flashState&&flashRate(true);qs('#tableSearch').addEventListener('input',searchTable);qs('#practiceWeak').onclick=practiceWeakElements;qs('#resetProgress').onclick=resetProgress;qs('#resultsHome').onclick=()=>showScreen('homeScreen');
     document.addEventListener('keydown',e=>{
       if(activeScreen==='gameScreen'&&currentSession?.mode!=='type'&&!answerLocked&&['1','2','3','4'].includes(e.key)){const b=qsa('#answers .answer-btn')[Number(e.key)-1];b?.click()}
@@ -646,6 +668,8 @@
   }
 
   renderModeGrid();renderSetupControls();bindEvents();renderHome();renderPeriodicTable(qs('#studyTable'),false);renderElementInfo();
+  handleHash();
+  window.addEventListener('hashchange',handleHash);
 })();
 </script>
 </body>
